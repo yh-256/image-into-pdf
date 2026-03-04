@@ -482,6 +482,32 @@ function getSelectedObject() {
   return imageObjects.find((obj) => obj.id === selectedId) || null;
 }
 
+function deleteSelectedImage() {
+  const selectedObj = getSelectedObject();
+  if (!selectedObj || selectedObj.pageIndex !== currentPage) {
+    return false;
+  }
+
+  const index = imageObjects.findIndex((obj) => obj.id === selectedObj.id);
+  if (index < 0) {
+    selectedId = null;
+    drawOverlay();
+    return false;
+  }
+
+  const [removed] = imageObjects.splice(index, 1);
+  imageCache.delete(removed.id);
+
+  if (dragState?.id === removed.id) {
+    dragState = null;
+  }
+
+  selectedId = null;
+  drawOverlay();
+  setStatus("Image deleted");
+  return true;
+}
+
 fileInput.addEventListener("change", (event) => {
   const target = event.currentTarget as HTMLInputElement;
   const file = target.files?.[0];
@@ -502,6 +528,33 @@ imageInput.addEventListener("change", (event) => {
 
 exportButton.addEventListener("click", () => {
   void handleExportPdf();
+});
+
+window.addEventListener("keydown", (event) => {
+  const isDeleteKey = event.key === "Delete" || event.key === "Backspace";
+  if (!isDeleteKey) {
+    return;
+  }
+
+  const target = event.target;
+  if (target instanceof HTMLElement) {
+    const isInputTarget =
+      target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      target.tagName === "SELECT" ||
+      target.isContentEditable;
+    if (isInputTarget) {
+      return;
+    }
+  }
+
+  const selectedObj = getSelectedObject();
+  if (!selectedObj || selectedObj.pageIndex !== currentPage) {
+    return;
+  }
+
+  event.preventDefault();
+  deleteSelectedImage();
 });
 
 prevButton.addEventListener("click", () => {

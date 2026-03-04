@@ -38,13 +38,13 @@ body {
 }
 
 #app {
-  min-height: 100vh;
+  height: 100dvh;
 }
 
 .app {
-  min-height: 100vh;
+  height: 100dvh;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
 }
 
 .toolbar {
@@ -117,24 +117,27 @@ button:not(:disabled):hover {
 }
 
 .stage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  min-height: 0;
+  overflow: auto;
   padding: 32px 24px;
 }
 
 .canvas-wrap {
   position: relative;
-  width: min(100%, 840px);
+  width: fit-content;
   min-height: 420px;
+  margin: 0 auto;
   padding: 32px;
   border-radius: 24px;
   border: 1px solid var(--border);
   background: white;
   box-shadow: var(--shadow);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+.canvas-stack {
+  position: relative;
+  width: max-content;
+  height: max-content;
 }
 
 .canvas-wrap.is-dragging {
@@ -144,17 +147,21 @@ button:not(:disabled):hover {
 
 #pdf-canvas,
 #overlay-canvas {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: block;
 }
 
 #overlay-canvas {
+  position: absolute;
+  inset: 0;
   pointer-events: auto;
 }
 
 .empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
   font-family: "IBM Plex Mono", monospace;
   padding: 12px 18px;
   border: 1px dashed var(--border);
@@ -186,11 +193,5 @@ button:not(:disabled):hover {
 
   .canvas-wrap {
     padding: 24px;
-  }
-
-  #pdf-canvas,
-  #overlay-canvas {
-    top: 50%;
-    left: 50%;
   }
 }

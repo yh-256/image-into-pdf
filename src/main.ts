@@ -56,8 +56,10 @@ app.innerHTML = `
     </header>
     <main class="stage">
       <div class="canvas-wrap" id="canvas-wrap">
-        <canvas id="pdf-canvas"></canvas>
-        <canvas id="overlay-canvas"></canvas>
+        <div class="canvas-stack" id="canvas-stack">
+          <canvas id="pdf-canvas"></canvas>
+          <canvas id="overlay-canvas"></canvas>
+        </div>
         <div id="empty-state" class="empty">Drop a PDF here or use Open PDF</div>
       </div>
     </main>
